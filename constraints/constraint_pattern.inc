@@ -13,7 +13,7 @@
  * Description of the constraint.
  */
 function password_policy_constraint_pattern_description() {
-  return array('name' => t('Keyboard Patterns'), 'description' => t('Passwords may not contain keyboard patterns such as "abc", "123", etc.'));
+  return array('name' => t('Keyboard Patterns'), 'description' => t('Passwords may not contain digit or keyboard patterns such as "abc", "123", "qwer", etc.'));
 }
 
 /**
