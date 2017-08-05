@@ -13,7 +13,7 @@
  * Description of the constraint.
  */
 function password_policy_constraint_obvious_description() {
-  return array('name' => t('Obvious'), 'description' => t('Passwords may not be easy to guess, e.g. "password".'));
+  return array('name' => t('Obvious'), 'description' => t('Passwords may not be easy to guess, for example, "password".'));
 }
 
 /**
@@ -31,9 +31,10 @@ function password_policy_constraint_obvious_error($constraint) {
 function password_policy_constraint_obvious_get_obvious_list() {
   return array(
     // Common words/phrases.
-    'pass', // In 'password' etc.
+    'pass',
     'login',
     'enter',
+    'letmein',
     'qwerty',
     'abcdef',
     'abcabc',
