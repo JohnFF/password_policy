@@ -40,7 +40,7 @@ function password_policy_constraint_character_repetition_validate($password, $co
   }
 
   foreach ($characters_count as $each_character_repetition_entry) {
-    if ($each_character_repetition_entry >= $constraint) {
+    if ($each_character_repetition_entry > $constraint) {
       return FALSE;
     }
   }
