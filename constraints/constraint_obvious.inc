@@ -42,6 +42,7 @@ function password_policy_constraint_obvious_get_obvious_list() {
     'abc123',
     'computer',
     'laptop',
+    'monitor',
   );
 }
 
@@ -53,10 +54,11 @@ function password_policy_constraint_obvious_validate($password, $constraint, $ac
   $translated_password = drupal_strtolower($password);
 
   $leet_translations = array(
-    '4' => 'a',
-    '3' => 'e',
     '0' => 'o',
     '1' => 'l',
+    '3' => 'e',
+    '4' => 'a',
+    '5' => 's',
     '7' => 't',
   );
 
