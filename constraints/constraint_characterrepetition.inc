@@ -12,21 +12,21 @@
 /**
  * Description of the constraint.
  */
-function password_policy_constraint_character_repetition_description() {
+function password_policy_constraint_characterrepetition_description() {
   return array('name' => t('Character Repetition'), 'description' => t('Passwords may not repeat the same number of characters too many times.'));
 }
 
 /**
  * Error message of the constraint.
  */
-function password_policy_constraint_character_repetition_error($constraint) {
+function password_policy_constraint_characterrepetition_error($constraint) {
   return format_string('Passwords may not repeat the same letter more than @count times.', array('@count' => $constraint));
 }
 
 /**
  * Password validation.
  */
-function password_policy_constraint_character_repetition_validate($password, $constraint, $account) {
+function password_policy_constraint_characterrepetition_validate($password, $constraint, $account) {
 
   $characters_count = array();
 
@@ -40,7 +40,7 @@ function password_policy_constraint_character_repetition_validate($password, $co
   }
 
   foreach ($characters_count as $each_character_repetition_entry) {
-    if ($each_character_repetition_entry > $constraint) {
+    if ($each_character_repetition_entry >= $constraint) {
       return FALSE;
     }
   }
@@ -51,7 +51,7 @@ function password_policy_constraint_character_repetition_validate($password, $co
 /**
  * Javascript portion.
  */
-function password_policy_constraint_character_repetition_js($constraint, $account) {
+function password_policy_constraint_characterrepetition_js($constraint, $account) {
   // Add username as JavaScript setting.
 //  $username = isset($account->name) ? $account->name : '';
 //  $data = array(

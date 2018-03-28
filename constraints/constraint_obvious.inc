@@ -62,7 +62,9 @@ function password_policy_constraint_obvious_validate($password, $constraint, $ac
     '7' => 't',
   );
 
-  $translated_password = strtr($translated_password, $leet_translations);
+  foreach ($leet_translations as $each_leet_translation_key => $each_leet_translation) {
+    $translated_password = strtr($translated_password, $each_leet_translation_key, $each_leet_translation);
+  }
 
   $obvious_list = password_policy_constraint_obvious_get_obvious_list();
 
