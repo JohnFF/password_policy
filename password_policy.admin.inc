@@ -480,11 +480,18 @@ function password_policy_admin_form_validate($form, &$form_state) {
   if (empty($roles)) {
     form_set_error('roles', t('You must select at least one role for a policy to apply to.'));
   }
-  if (!empty($form_state['values']['warning']) && !preg_match('/^[0-9,]+$/', $form_state['values']['warning'])) {
-    form_set_error('warning', t('Warning must only contain digits and commas.'));
-  }
+  _password_policy_validate_expiration_warning($form_state);
   if (_password_policy_validating_new_policy($form_state)) {
     _password_policy_validate_unique_policy_name($form_state);
+  }
+}
+
+/**
+ * Validates expiration warning.
+ */
+function _password_policy_validate_expiration_warning($form_state) {
+  if (!empty($form_state['values']['warning']) && !preg_match('/^[0-9]+(,[0-9]+)*+$/', $form_state['values']['warning'])) {
+    form_set_error('warning', t('Warning must be a number of days or comma-separated numbers of days. For example, "30" or "30,7".'));
   }
 }
 
