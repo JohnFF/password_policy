@@ -13,14 +13,19 @@
  * Description of the constraint.
  */
 function password_policy_constraint_characterrepetition_description() {
-  return array('name' => t('Character Repetition'), 'description' => t('Passwords may not repeat the same number of characters too many times.'));
+  return array('name' => t('Character Repetition'), 'description' => t('Passwords may not repeat the same character more than this number of times.'));
 }
 
 /**
  * Error message of the constraint.
  */
 function password_policy_constraint_characterrepetition_error($constraint) {
-  return format_string('Passwords may not repeat the same letter more than @count times.', array('@count' => $constraint));
+  if ($constraint == 1) {
+    return format_string('Passwords may not repeat the same letter more than once.', array('@count' => $constraint));
+  }
+  else {
+    return format_string('Passwords may not repeat the same letter more than @count times.', array('@count' => $constraint));
+  }
 }
 
 /**
@@ -40,7 +45,7 @@ function password_policy_constraint_characterrepetition_validate($password, $con
   }
 
   foreach ($characters_count as $each_character_repetition_entry) {
-    if ($each_character_repetition_entry >= $constraint) {
+    if ($each_character_repetition_entry > $constraint) {
       return FALSE;
     }
   }

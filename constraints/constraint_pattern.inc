@@ -31,7 +31,7 @@ function password_policy_constraint_pattern_error($constraint) {
 function password_policy_constraint_pattern_get_pattern_list() {
   return array(
     // Digit patterns.
-    '123', 
+    '123',
     '321',
     'abc',
     'cba',
@@ -54,7 +54,15 @@ function password_policy_constraint_pattern_get_pattern_list() {
  */
 function password_policy_constraint_pattern_validate($password, $constraint, $account) {
 
-  $translated_password = drupal_strtolower($password);
+  $password = drupal_strtolower($password);
+
+  $pattern_list = password_policy_constraint_pattern_get_pattern_list();
+
+  foreach ($pattern_list as $each_pattern_entry) {
+    if (strpos($password, $each_pattern_entry) !== FALSE) {
+      return FALSE;
+    }
+  }
 
   $leet_translations = array(
     '4' => 'a',
@@ -64,9 +72,7 @@ function password_policy_constraint_pattern_validate($password, $constraint, $ac
     '7' => 't',
   );
 
-  $translated_password = strtr($translated_password, $leet_translations);
-
-  $pattern_list = password_policy_constraint_pattern_get_pattern_list();
+  $translated_password = strtr($password, $leet_translations);
 
   foreach ($pattern_list as $each_pattern_entry) {
     if (strpos($translated_password, $each_pattern_entry) !== FALSE) {
