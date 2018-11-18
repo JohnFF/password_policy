@@ -87,32 +87,26 @@ function password_policy_constraint_pattern_validate($password, $constraint, $ac
  * Javascript portion.
  */
 function password_policy_constraint_pattern_js($constraint, $account) {
-  // Add username as JavaScript setting.
-//  $username = isset($account->name) ? $account->name : '';
-//  $data = array(
-//    'passwordPolicy' => array(
-//      'username' => $username,
-//    ),
-//  );
-//  drupal_add_js($data, 'setting');
-//
-//  return <<<JS
-//
-//    var username = '';
-//    var usernameInput = jQuery('input.username');
-//    if (usernameInput.length) {
-//      username = usernameInput.val();
-//    }
-//    else {
-//      username = Drupal.settings.passwordPolicy.username;
-//    }
-//    if (username) {
-//      var username_lowercase = username.toLowerCase();
-//      var password_lowercase = value.toLowerCase();
-//      if (password_lowercase.indexOf(username_lowercase) != -1) {
-//        strength = 'low';
-//        msg.push(translate.constraint_pattern);
-//      }
-//    }
-//JS;
+  $data = array(
+    'passwordPolicy' => array(
+      'passwords_patterns' => password_policy_constraint_pattern_get_pattern_list(),
+    ),
+  );
+  drupal_add_js($data, 'setting');
+
+  return <<<JS
+
+    if (!Drupal.settings.passwordPolicy.passwords_patterns) {
+      return;
+    }
+    var password_lowercase = value.toLowerCase();
+
+    var arrayLength = Drupal.settings.passwordPolicy.passwords_patterns.length;
+    for (var i = 0; i < arrayLength; i++) {
+      if (password_lowercase.includes(Drupal.settings.passwordPolicy.passwords_patterns[i])) {
+        strength = 'low';
+        msg.push(translate.constraint_pattern);
+      }
+    }
+JS;
 }
