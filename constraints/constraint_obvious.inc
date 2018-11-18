@@ -20,7 +20,7 @@ function password_policy_constraint_obvious_description() {
  * Error message of the constraint.
  */
 function password_policy_constraint_obvious_error($constraint) {
-  return t('Passwords may not be easy to guess. Examples include "password".');
+  return t('Passwords may not contain phrases that are easy to guess. Examples include "password".');
 }
 
 /**
@@ -81,32 +81,27 @@ function password_policy_constraint_obvious_validate($password, $constraint, $ac
  * Javascript portion.
  */
 function password_policy_constraint_obvious_js($constraint, $account) {
-  // Add username as JavaScript setting.
-//  $username = isset($account->name) ? $account->name : '';
-//  $data = array(
-//    'passwordPolicy' => array(
-//      'username' => $username,
-//    ),
-//  );
-//  drupal_add_js($data, 'setting');
-//
-//  return <<<JS
-//
-//    var username = '';
-//    var usernameInput = jQuery('input.username');
-//    if (usernameInput.length) {
-//      username = usernameInput.val();
-//    }
-//    else {
-//      username = Drupal.settings.passwordPolicy.username;
-//    }
-//    if (username) {
-//      var username_lowercase = username.toLowerCase();
-//      var password_lowercase = value.toLowerCase();
-//      if (password_lowercase.indexOf(username_lowercase) != -1) {
-//        strength = 'low';
-//        msg.push(translate.constraint_obvious);
-//      }
-//    }
-//JS;
+
+  $data = array(
+    'passwordPolicy' => array(
+      'obvious_passwords' => password_policy_constraint_obvious_get_obvious_list(),
+    ),
+  );
+  drupal_add_js($data, 'setting');
+
+  return <<<JS
+
+    if (!Drupal.settings.passwordPolicy.obvious_passwords) {
+      return;
+    }
+    var password_lowercase = value.toLowerCase();
+
+    var arrayLength = Drupal.settings.passwordPolicy.obvious_passwords.length;
+    for (var i = 0; i < arrayLength; i++) {
+      if (password_lowercase.includes(Drupal.settings.passwordPolicy.obvious_passwords[i])) {
+        strength = 'low';
+        msg.push(translate.constraint_obvious);
+      }
+    }
+JS;
 }
