@@ -57,32 +57,28 @@ function password_policy_constraint_characterrepetition_validate($password, $con
  * Javascript portion.
  */
 function password_policy_constraint_characterrepetition_js($constraint, $account) {
-  // Add username as JavaScript setting.
-//  $username = isset($account->name) ? $account->name : '';
-//  $data = array(
-//    'passwordPolicy' => array(
-//      'username' => $username,
-//    ),
-//  );
-//  drupal_add_js($data, 'setting');
-//
-//  return <<<JS
-//
-//    var username = '';
-//    var usernameInput = jQuery('input.username');
-//    if (usernameInput.length) {
-//      username = usernameInput.val();
-//    }
-//    else {
-//      username = Drupal.settings.passwordPolicy.username;
-//    }
-//    if (username) {
-//      var username_lowercase = username.toLowerCase();
-//      var password_lowercase = value.toLowerCase();
-//      if (password_lowercase.indexOf(username_lowercase) != -1) {
-//        strength = 'low';
-//        msg.push(translate.constraint_character_repetition);
-//      }
-//    }
-//JS;
+
+  $data = array(
+    'passwordPolicy' => array(
+      'repetition_max' => $constraint,
+    ),
+  );
+  drupal_add_js($data, 'setting');
+
+  return <<<JS
+
+    if (!Drupal.settings.passwordPolicy.repetition_max) {
+      return;
+    }
+
+    // No case sensitivity. aAa is not as bad as aaa.
+    // use regex of the form that matches if there's more than the repetition_max
+    // e.g. (.){3,) matches on 3 or more.
+    var pattern = new RegExp('(.){' + (parseInt(Drupal.settings.passwordPolicy.repetition_max) + 1) + ',}', 'g');
+
+    if (value.match(pattern)) {
+      strength = 'low';
+      msg.push(translate.constraint_characterrepetition);
+    }
+JS;
 }
